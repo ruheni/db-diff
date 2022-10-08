@@ -1,0 +1,35 @@
+{
+  "name": "prisma-db-diff",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "bin": {
+    "db-diff": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile",
+    "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
+    "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",
+    "lint": "eslint **/*.ts",
+    "lint:fix": "eslint **/*.ts --fix",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "5.1.0",
+    "detect-package-manager": "2.0.1",
+    "execa": "6.1.0",
+    "prisma": "4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.8.3",
+    "eslint": "8.25.0",
+    "prettier": "2.7.1",
+    "tsup": "6.2.3",
+    "typescript": "4.8.4",
+    "vitest": "0.24.0"
+  }
+}
