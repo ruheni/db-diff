@@ -15,9 +15,7 @@ jobs:
         with:
           node-version: 16.x
           cache: 'pnpm'
-      - name: pnpm install
-        run: pnpm install
-      # - run: pnpm test
+      - run: pnpm install
       - run: pnpm run build
       - uses: JS-DevTools/npm-publish@v1
         with:
