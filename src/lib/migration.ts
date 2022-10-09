@@ -18,21 +18,20 @@ async function createMigrationDirectoryIfNotExists(migrationDir: string) {
 async function getNextMigrationId(files, migrationKind: MigrationKind) {
   const migrations = await fs.readdir(files);
 
-  if (migrationKind === 'up') {
+  if (migrationKind === "up") {
     const sortedUpMigrations = migrations
       .filter((migration) => migration.includes(".do.sql"))
       .sort((a, b) => +a - +b);
 
-    console.log('sortedUpMigrations', sortedUpMigrations)
-    return Number(sortedUpMigrations.length) + 1
-  
+    console.log("sortedUpMigrations", sortedUpMigrations);
+    return Number(sortedUpMigrations.length) + 1;
   }
-  if (migrationKind === 'down') {
+  if (migrationKind === "down") {
     const sortedDownMigrations = migrations
       .filter((migration) => migration.includes(".undo.sql"))
       .sort((a, b) => +a - +b);
 
-    return Number(sortedDownMigrations.length) + 1
+    return Number(sortedDownMigrations.length) + 1;
   }
 }
 
@@ -45,10 +44,10 @@ async function generateMigrations(
 
   const nextMigrationId = await getNextMigrationId(migrationDir, migrationKind);
 
-  console.log('next migration id', nextMigrationId)
+  console.log("next migration id", nextMigrationId);
   switch (migrationKind) {
     case "up":
-      const { stdout: upMigrationStdout, } = await execaCommand(
+      const { stdout: upMigrationStdout } = await execaCommand(
         `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
          --to-schema-datamodel ${schemaPath} \
