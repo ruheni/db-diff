@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/node': 18.8.3
   chalk: 5.1.0
+  commander: 9.4.1
   detect-package-manager: 2.0.1
   eslint: 8.25.0
   execa: 6.1.0
@@ -14,6 +15,7 @@ specifiers:
 
 dependencies:
   chalk: 5.1.0
+  commander: 9.4.1
   detect-package-manager: 2.0.1
   execa: 6.1.0
   prisma: 4.4.0
@@ -286,6 +288,11 @@ packages:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
     dev: true
+
+  /commander/9.4.1:
+    resolution: {integrity: sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: false
 
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
