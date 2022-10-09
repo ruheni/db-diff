@@ -44,7 +44,7 @@ async function generateMigrations(
   const nextMigrationId = await getNextMigrationId(migrationDir, migrationKind);
 
   switch (migrationKind) {
-    case "up":
+    case "up": {
       const { stdout: upMigrationStdout } = await execaCommand(
         `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
@@ -65,8 +65,9 @@ async function generateMigrations(
         logger.info("📭 No new up migration was generated.");
       }
       break;
+    }
 
-    case "down":
+    case "down": {
       const { stdout: downMigrationStdout } = await execaCommand(
         `npx prisma migrate diff \
         --from-schema-datamodel ${schemaPath} \
@@ -86,7 +87,7 @@ async function generateMigrations(
         logger.info("📭 No new down migration was generated.");
       }
       break;
-
+    }
     default:
       break;
   }
