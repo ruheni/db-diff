@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import logger from "./lib/logger";
 import generateMigrations from "./lib/migration";
 import CLI from "./cli";
@@ -11,25 +12,25 @@ async function main() {
     await generateMigrations(
       normalizedMigrationsDirPath,
       normalizedSchemaPath,
-      "up"
+      "up",
     );
   } else if (down) {
     await generateMigrations(
       normalizedMigrationsDirPath,
       normalizedSchemaPath,
-      "down"
+      "down",
     );
   } else {
     Promise.all([
       await generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
-        "down"
+        "down",
       ),
       await generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
-        "up"
+        "up",
       ),
     ]);
   }
@@ -41,7 +42,7 @@ main().catch((e) => {
     logger.error(e.message);
   } else {
     logger.error("Oops, something went wrong...");
-    console.log(e);
+    logger.error(e);
   }
 });
 

@@ -17,12 +17,12 @@ export default () => {
     .option(
       "--schema <path-to-your-schema-file>",
       "Path to your Prisma schema file. Default value is `./prisma/schema.prisma`",
-      "./prisma/schema.prisma"
+      "./prisma/schema.prisma",
     )
     .option(
       "--migrations-dir <path-to-your-migrations-dir>",
       "Path to your migrations directory. Default value is `migrations`",
-      "./migrations"
+      "./migrations",
     )
     .option("--up", "Generates the `up` migration only", false)
     .option("--down", "Generates the `down` migration only", false)

@@ -23,7 +23,6 @@ async function getNextMigrationId(files, migrationKind: MigrationKind) {
       .filter((migration) => migration.includes(".do.sql"))
       .sort((a, b) => +a - +b);
 
-    console.log("sortedUpMigrations", sortedUpMigrations);
     return Number(sortedUpMigrations.length) + 1;
   }
   if (migrationKind === "down") {
@@ -38,30 +37,29 @@ async function getNextMigrationId(files, migrationKind: MigrationKind) {
 async function generateMigrations(
   migrationDir,
   schemaPath,
-  migrationKind: MigrationKind
+  migrationKind: MigrationKind,
 ) {
   await createMigrationDirectoryIfNotExists(migrationDir);
 
   const nextMigrationId = await getNextMigrationId(migrationDir, migrationKind);
 
-  console.log("next migration id", nextMigrationId);
   switch (migrationKind) {
     case "up":
       const { stdout: upMigrationStdout } = await execaCommand(
         `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
          --to-schema-datamodel ${schemaPath} \
-         --script`
+         --script`,
       );
 
       if (!upMigrationStdout.includes("empty migration")) {
         await fs
           .appendFile(
             `${migrationDir}/${nextMigrationId}.do.sql`,
-            upMigrationStdout
+            upMigrationStdout,
           )
           .then(() =>
-            logger.success(`🗳 Generated new ${nextMigrationId} up migration`)
+            logger.success(`🗳 Generated new ${nextMigrationId} up migration`),
           );
       } else {
         logger.info("📭 No new up migration was generated.");
@@ -73,16 +71,16 @@ async function generateMigrations(
         `npx prisma migrate diff \
         --from-schema-datamodel ${schemaPath} \
         --to-schema-datasource ${schemaPath} \
-         --script`
+         --script`,
       );
       if (!downMigrationStdout.includes("empty migration")) {
         await fs
           .appendFile(
             `${migrationDir}/${nextMigrationId}.undo.sql`,
-            downMigrationStdout
+            downMigrationStdout,
           )
           .then(() =>
-            logger.success(`🗳 Generated new ${nextMigrationId} down migration`)
+            logger.success(`🗳 Generated new ${nextMigrationId} down migration`),
           );
       } else {
         logger.info("📭 No new down migration was generated.");

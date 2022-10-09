@@ -8,9 +8,10 @@
     "db-diff": "./dist/index.js"
   },
   "scripts": {
-    "dev": "tsup src/index.ts --format esm --watch --clean --onSuccess \"node dist/index.js\"",
-    "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile",
+    "dev": "tsup src/index.ts  --format esm --watch --clean --onSuccess \"node dist/index.js\"",
+    "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile --treeshake",
     "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
+    "local": "npm run build && npm i -g && npx db-diff",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",
     "lint": "eslint **/*.ts",
     "lint:fix": "eslint **/*.ts --fix",
@@ -29,6 +30,8 @@
   },
   "devDependencies": {
     "@types/node": "18.8.3",
+    "@typescript-eslint/eslint-plugin": "5.39.0",
+    "@typescript-eslint/parser": "5.39.0",
     "eslint": "8.25.0",
     "prettier": "2.7.1",
     "tsup": "6.2.3",
