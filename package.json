@@ -8,6 +8,7 @@
     "db-diff": "./dist/index.js"
   },
   "scripts": {
+    "dev": "tsup src/index.ts --format esm --watch --clean --onSuccess \"node dist/index.js\"",
     "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile",
     "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",

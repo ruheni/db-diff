@@ -1,6 +1,5 @@
 import { execaCommand } from "execa";
 import fs from "fs/promises";
-import commandRunner from "./commandRunner";
 import logger from "./logger";
 
 type MigrationKind = "up" | "down";
@@ -10,8 +9,7 @@ async function createMigrationDirectoryIfNotExists(migrationDir: string) {
     fs.stat(migrationDir);
   } catch (error) {
     if (error.code === "ENOENT") {
-      // TODO: add logger info here
-      logger.info("");
+      logger.info("Generating migration folder");
       fs.mkdir(migrationDir);
     }
   }
@@ -20,25 +18,22 @@ async function createMigrationDirectoryIfNotExists(migrationDir: string) {
 async function getNextMigrationId(files, migrationKind: MigrationKind) {
   const migrations = await fs.readdir(files);
 
-  if (migrations.length === 0) {
-    return 1;
+  if (migrationKind === 'up') {
+    const sortedUpMigrations = migrations
+      .filter((migration) => migration.includes(".do.sql"))
+      .sort((a, b) => +a - +b);
+
+    console.log('sortedUpMigrations', sortedUpMigrations)
+    return Number(sortedUpMigrations.length) + 1
+  
   }
+  if (migrationKind === 'down') {
+    const sortedDownMigrations = migrations
+      .filter((migration) => migration.includes(".undo.sql"))
+      .sort((a, b) => +a - +b);
 
-  const sortedMigrations = migrations
-    // figure out if it's `down` or `up` migration
-    .filter((migration) => {
-      if (migrationKind === "up") {
-        return migration.includes(".do.sql");
-      }
-      if (migrationKind === "down") {
-        return migration.includes(".undo.sql");
-      }
-    })
-    .sort((a, b) => +a - +b);
-
-  const latestMigrationVersion = sortedMigrations[sortedMigrations.length - 1];
-
-  return Number(latestMigrationVersion) + 1;
+    return Number(sortedDownMigrations.length) + 1
+  }
 }
 
 async function generateMigrations(
@@ -46,15 +41,15 @@ async function generateMigrations(
   schemaPath,
   migrationKind: MigrationKind
 ) {
-  const command = commandRunner();
   await createMigrationDirectoryIfNotExists(migrationDir);
 
   const nextMigrationId = await getNextMigrationId(migrationDir, migrationKind);
 
+  console.log('next migration id', nextMigrationId)
   switch (migrationKind) {
     case "up":
-      const { stdout: upMigrationStdout } = await execaCommand(
-        `${command} prisma migrate diff \
+      const { stdout: upMigrationStdout, } = await execaCommand(
+        `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
          --to-schema-datamodel ${schemaPath} \
          --script`
@@ -76,12 +71,12 @@ async function generateMigrations(
 
     case "down":
       const { stdout: downMigrationStdout } = await execaCommand(
-        `${command} prisma migrate diff \
-         --from-schema-datasource ${schemaPath} \
-         --to-schema-datamodel ${schemaPath} \
+        `npx prisma migrate diff \
+        --from-schema-datamodel ${schemaPath} \
+        --to-schema-datasource ${schemaPath} \
          --script`
       );
-      if (!upMigrationStdout.includes("empty migration")) {
+      if (!downMigrationStdout.includes("empty migration")) {
         await fs
           .appendFile(
             `${migrationDir}/${nextMigrationId}.undo.sql`,

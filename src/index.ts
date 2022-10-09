@@ -1,18 +1,36 @@
 import logger from "./lib/logger";
 import generateMigrations from "./lib/migration";
 import CLI from "./cli";
-
+import path from "path";
 async function main() {
   const { migrationsDir, schema, up, down } = CLI();
 
+  const normalizedMigrationsDirPath = path.join(process.cwd(), migrationsDir);
+  const normalizedSchemaPath = path.join(process.cwd(), schema);
   if (up) {
-    await generateMigrations(migrationsDir, schema, "up");
+    await generateMigrations(
+      normalizedMigrationsDirPath,
+      normalizedSchemaPath,
+      "up"
+    );
   } else if (down) {
-    await generateMigrations(migrationsDir, schema, "down");
+    await generateMigrations(
+      normalizedMigrationsDirPath,
+      normalizedSchemaPath,
+      "down"
+    );
   } else {
     Promise.all([
-      await generateMigrations(migrationsDir, schema, "down"),
-      await generateMigrations(migrationsDir, schema, "up"),
+      await generateMigrations(
+        normalizedMigrationsDirPath,
+        normalizedSchemaPath,
+        "down"
+      ),
+      await generateMigrations(
+        normalizedMigrationsDirPath,
+        normalizedSchemaPath,
+        "up"
+      ),
     ]);
   }
 }
