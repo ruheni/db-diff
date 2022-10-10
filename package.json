@@ -24,7 +24,6 @@
   "dependencies": {
     "chalk": "5.1.0",
     "commander": "9.4.1",
-    "detect-package-manager": "2.0.1",
     "execa": "6.1.0",
     "prisma": "4.4.0"
   },
