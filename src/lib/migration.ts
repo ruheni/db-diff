@@ -6,10 +6,10 @@ type MigrationKind = "up" | "down";
 
 async function createMigrationDirectoryIfNotExists(migrationDir: string) {
   try {
-    fs.stat(migrationDir);
+    await fs.stat(migrationDir);
   } catch (error) {
     if (error.code === "ENOENT") {
-      logger.info("Generating migration folder");
+      logger.info(`Creating your migration folder in ${migrationDir}`);
       fs.mkdir(migrationDir);
     }
   }
@@ -41,50 +41,53 @@ async function generateMigrations(
 ) {
   await createMigrationDirectoryIfNotExists(migrationDir);
 
-  const nextMigrationId = await getNextMigrationId(migrationDir, migrationKind);
+  const nextMigrationId = await getNextMigrationId(
+    migrationDir,
+    migrationKind,
+  ).then((value) => value?.toString().padStart(3, "0"));
 
   switch (migrationKind) {
     case "up": {
-      const { stdout: upMigrationStdout } = await execaCommand(
+      const { exitCode, stdout } = await execaCommand(
         `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
          --to-schema-datamodel ${schemaPath} \
-         --script`,
+         --script \
+         --exit-code`,
       );
 
-      if (!upMigrationStdout.includes("empty migration")) {
+      if (exitCode === 2) {
         await fs
-          .appendFile(
-            `${migrationDir}/${nextMigrationId}.do.sql`,
-            upMigrationStdout,
-          )
+          .writeFile(`${migrationDir}/${nextMigrationId}.do.sql`, stdout)
           .then(() =>
-            logger.success(`🗳 Generated new ${nextMigrationId} up migration`),
+            logger.success(
+              `🗳 Generated ${nextMigrationId}.do.sql up migration`,
+            ),
           );
       } else {
-        logger.info("📭 No new up migration was generated.");
+        logger.gray("📭 No new up migration was generated.");
       }
       break;
     }
 
     case "down": {
-      const { stdout: downMigrationStdout } = await execaCommand(
+      const { exitCode, stdout } = await execaCommand(
         `npx prisma migrate diff \
         --from-schema-datamodel ${schemaPath} \
         --to-schema-datasource ${schemaPath} \
-         --script`,
+         --script \
+         --exit-code`,
       );
-      if (!downMigrationStdout.includes("empty migration")) {
+      if (exitCode === 2) {
         await fs
-          .appendFile(
-            `${migrationDir}/${nextMigrationId}.undo.sql`,
-            downMigrationStdout,
-          )
+          .appendFile(`${migrationDir}/${nextMigrationId}.undo.sql`, stdout)
           .then(() =>
-            logger.success(`🗳 Generated new ${nextMigrationId} down migration`),
+            logger.success(
+              `🗳 Generated new ${nextMigrationId}.undo.sql down migration`,
+            ),
           );
       } else {
-        logger.info("📭 No new down migration was generated.");
+        logger.gray("📭 No new down migration was generated.");
       }
       break;
     }
