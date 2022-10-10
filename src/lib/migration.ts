@@ -52,8 +52,7 @@ async function generateMigrations(
         `npx prisma migrate diff \
          --from-schema-datasource ${schemaPath} \
          --to-schema-datamodel ${schemaPath} \
-         --script \
-         --exit-code`,
+         --script`,
       );
 
       if (exitCode === 2) {
@@ -64,8 +63,12 @@ async function generateMigrations(
               `🗳 Generated ${nextMigrationId}.do.sql up migration`,
             ),
           );
-      } else {
+      } else if (exitCode === 0) {
         logger.gray("📭 No new up migration was generated.");
+      } else {
+        logger.error(`Oops, something went wrong: 
+        ${stdout}
+        `)
       }
       break;
     }
@@ -75,9 +78,9 @@ async function generateMigrations(
         `npx prisma migrate diff \
         --from-schema-datamodel ${schemaPath} \
         --to-schema-datasource ${schemaPath} \
-         --script \
-         --exit-code`,
+         --script`,
       );
+
       if (exitCode === 2) {
         await fs
           .appendFile(`${migrationDir}/${nextMigrationId}.undo.sql`, stdout)
@@ -86,8 +89,12 @@ async function generateMigrations(
               `🗳 Generated new ${nextMigrationId}.undo.sql down migration`,
             ),
           );
-      } else {
+      } else if (exitCode === 0) {
         logger.gray("📭 No new down migration was generated.");
+      } else {
+        logger.error(`Oops, something went wrong: 
+        ${stdout}
+        `)
       }
       break;
     }

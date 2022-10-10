@@ -5,13 +5,13 @@
   "type": "module",
   "exports": "./dist/index.js",
   "bin": {
-    "db-diff": "./dist/index.js"
+    "prisma-db-diff": "./dist/index.js"
   },
   "scripts": {
     "dev": "tsup src/index.ts  --format esm --watch --clean --onSuccess \"node dist/index.js\"",
     "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile --treeshake",
     "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
-    "local": "npm run build && npm i -g && npx db-diff",
+    "local": "npm run build && npm i -g && npx prisma-db-diff",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",
     "lint": "eslint **/*.ts",
     "lint:fix": "eslint **/*.ts --fix",
