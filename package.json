@@ -1,5 +1,5 @@
 {
-  "name": "db-diff",
+  "name": "@ruheni/db-diff",
   "version": "0.2.1",
   "description": "",
   "type": "module",
@@ -11,7 +11,7 @@
     "dev": "tsup src/index.ts  --format esm --watch --clean --onSuccess \"node dist/index.js\"",
     "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile --treeshake",
     "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
-    "local": "npm run build && npm i -g && npx prisma-db-diff",
+    "local": "npm run build && npm i -g && npx db-diff",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",
     "lint": "eslint **/*.ts",
     "lint:fix": "eslint **/*.ts --fix",
