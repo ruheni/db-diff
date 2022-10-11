@@ -27,12 +27,12 @@ async function main() {
       await generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
-        "down",
+        "up",
       ),
       await generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
-        "up",
+        "down",
       ),
     ]);
   }

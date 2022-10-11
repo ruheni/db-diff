@@ -48,54 +48,69 @@ async function generateMigrations(
 
   switch (migrationKind) {
     case "up": {
-      const { exitCode, stdout } = await execaCommand(
-        `npx prisma migrate diff \
-         --from-schema-datasource ${schemaPath} \
-         --to-schema-datamodel ${schemaPath} \
-         --script`,
-      );
+      try {
+        const { exitCode } = await execaCommand(
+          `npx prisma migrate diff \
+            --from-schema-datasource ${schemaPath} \
+            --to-schema-datamodel ${schemaPath} \
+            --script \
+            --exit-code`,
+        );
 
-      if (exitCode === 2) {
-        await fs
-          .writeFile(`${migrationDir}/${nextMigrationId}.do.sql`, stdout)
-          .then(() =>
-            logger.success(
-              `🗳 Generated ${nextMigrationId}.do.sql up migration`,
-            ),
-          );
-      } else if (exitCode === 0) {
-        logger.gray("📭 No new up migration was generated.");
-      } else {
-        logger.error(`Oops, something went wrong: 
-        ${stdout}
-        `)
+        if (exitCode === 0) {
+          logger.gray("📭 No up migration was generated.");
+        }
+      } catch (error) {
+        console.log("Error exitCode", error.exitCode);
+        if (error.exitCode === 2) {
+          await fs
+            .writeFile(
+              `${migrationDir}/${nextMigrationId}.do.sql`,
+              error.stdout,
+            )
+            .then(() =>
+              logger.success(
+                `🗳 Generated ${nextMigrationId}.do.sql up migration`,
+              ),
+            );
+        } else {
+          logger.error(`Oops, something went wrong: \n${error}`);
+        }
       }
       break;
     }
 
     case "down": {
-      const { exitCode, stdout } = await execaCommand(
-        `npx prisma migrate diff \
-        --from-schema-datamodel ${schemaPath} \
-        --to-schema-datasource ${schemaPath} \
-         --script`,
-      );
+      try {
+        const { exitCode } = await execaCommand(
+          `npx prisma migrate diff \
+          --from-schema-datamodel ${schemaPath} \
+          --to-schema-datasource ${schemaPath} \
+           --script \
+           --exit-code`,
+        );
 
-      if (exitCode === 2) {
-        await fs
-          .appendFile(`${migrationDir}/${nextMigrationId}.undo.sql`, stdout)
-          .then(() =>
-            logger.success(
-              `🗳 Generated new ${nextMigrationId}.undo.sql down migration`,
-            ),
-          );
-      } else if (exitCode === 0) {
-        logger.gray("📭 No new down migration was generated.");
-      } else {
-        logger.error(`Oops, something went wrong: 
-        ${stdout}
-        `)
+        if (exitCode === 0) {
+          logger.gray("📭 No down migration was generated.");
+        }
+      } catch (error) {
+        if (error.exitCode === 2) {
+          await fs
+            .appendFile(
+              `${migrationDir}/${nextMigrationId}.undo.sql`,
+              error.stdout,
+            )
+            .then(() =>
+              logger.success(
+                `🗳 Generated ${nextMigrationId}.undo.sql down migration`,
+              ),
+            );
+        } else {
+          logger.error(`Oops, something went wrong: ${error}
+          `);
+        }
       }
+
       break;
     }
     default:
