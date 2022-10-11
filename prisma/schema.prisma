@@ -1,0 +1,23 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://admin:strongpassword@localhost:5430/db-diff-testing"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+
+  author   User? @relation(fields: [authorId], references: [id])
+  authorId Int?
+}
