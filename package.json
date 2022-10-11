@@ -1,11 +1,11 @@
 {
-  "name": "prisma-db-diff",
+  "name": "db-diff",
   "version": "0.2.0",
   "description": "",
   "type": "module",
   "exports": "./dist/index.js",
   "bin": {
-    "prisma-db-diff": "./dist/index.js"
+    "db-diff": "./dist/index.js"
   },
   "scripts": {
     "dev": "tsup src/index.ts  --format esm --watch --clean --onSuccess \"node dist/index.js\"",
