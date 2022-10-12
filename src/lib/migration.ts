@@ -49,7 +49,7 @@ async function generateMigrations(
   switch (migrationKind) {
     case "up": {
       try {
-        const { exitCode } = await execaCommand(
+        await execaCommand(
           `npx prisma migrate diff \
             --from-schema-datasource ${schemaPath} \
             --to-schema-datamodel ${schemaPath} \
@@ -57,9 +57,8 @@ async function generateMigrations(
             --exit-code`,
         );
 
-        if (exitCode === 0) {
-          logger.gray("📭 No up migration was generated.");
-        }
+        logger.gray("📭 No up migration was generated.");
+
       } catch (error) {
         console.log("Error exitCode", error.exitCode);
         if (error.exitCode === 2) {
@@ -82,7 +81,7 @@ async function generateMigrations(
 
     case "down": {
       try {
-        const { exitCode } = await execaCommand(
+        await execaCommand(
           `npx prisma migrate diff \
           --from-schema-datamodel ${schemaPath} \
           --to-schema-datasource ${schemaPath} \
@@ -90,9 +89,8 @@ async function generateMigrations(
            --exit-code`,
         );
 
-        if (exitCode === 0) {
-          logger.gray("📭 No down migration was generated.");
-        }
+        logger.gray("📭 No down migration was generated.");
+
       } catch (error) {
         if (error.exitCode === 2) {
           await fs
