@@ -58,7 +58,6 @@ async function generateMigrations(
         );
 
         logger.gray("📭 No up migration was generated.");
-
       } catch (error) {
         console.log("Error exitCode", error.exitCode);
         if (error.exitCode === 2) {
@@ -90,7 +89,6 @@ async function generateMigrations(
         );
 
         logger.gray("📭 No down migration was generated.");
-
       } catch (error) {
         if (error.exitCode === 2) {
           await fs
