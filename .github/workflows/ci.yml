@@ -24,7 +24,7 @@ jobs:
           node-version: 16.x
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm run test
+      - run: pnpm install -D prisma && pnpm run test
   bump-version:
     name: "Bump Version on main"
     needs: [setup-and-test]
