@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, expect, test, describe, afterEach } from "vitest";
+import { beforeAll, afterAll, expect, test } from "vitest";
 import path from "path";
 import fs from "fs/promises";
 import generateMigrations, {
@@ -6,24 +6,13 @@ import generateMigrations, {
 } from "../../src/lib/migration";
 import { execaCommand } from "execa";
 
-/**
- * Re-run with no changes: expect exit code of 0 and no message
- *
- * test: custom schema and migration directory
- * test: creates migration directory if it doesn't exist
- *
- * afterAll:
- *  - clean up tempdir
- */
-
-
 const updatedPath = (resourcePath) => path.join(process.cwd(), resourcePath);
 
 const testConfig = {
   schemaPath: updatedPath("prisma/schema.prisma"),
   migrationsPath: updatedPath("tmp"),
   customMigrationsPath: updatedPath("tmp/migrations"),
-  customSchemaPath: updatedPath('__test__/schema.prisma'),
+  customSchemaPath: updatedPath("__test__/schema.prisma"),
   dbPath: updatedPath("prisma/dev.db"),
 };
 
@@ -37,17 +26,13 @@ beforeAll(async () => {
 afterAll(async () => {
   await Promise.all([
     fs.rm(testConfig.dbPath),
-    fs.rm(testConfig.migrationsPath, { recursive: true, force: true })
+    fs.rm(testConfig.migrationsPath, { recursive: true, force: true }),
   ]);
 });
 
 test("Generate up and down migrations", async () => {
   await Promise.all([
-    generateMigrations(
-      testConfig.migrationsPath,
-      testConfig.schemaPath,
-      "up",
-    ),
+    generateMigrations(testConfig.migrationsPath, testConfig.schemaPath, "up"),
     generateMigrations(
       testConfig.migrationsPath,
       testConfig.schemaPath,
@@ -68,11 +53,7 @@ test("No migration generated when already if there are no change", async () => {
   );
 
   await Promise.all([
-    generateMigrations(
-      testConfig.migrationsPath,
-      testConfig.schemaPath,
-      "up",
-    ),
+    generateMigrations(testConfig.migrationsPath, testConfig.schemaPath, "up"),
     generateMigrations(
       testConfig.migrationsPath,
       testConfig.schemaPath,
@@ -89,21 +70,22 @@ test("Custom migration directory", async () => {
   await execaCommand(
     `npx prisma db execute --file ${testConfig.migrationsPath}/001.undo.sql`,
   );
-  await createMigrationDirectoryIfNotExists(testConfig.customMigrationsPath)
-    .then(async () => {
-      return Promise.all([
-        generateMigrations(
-          testConfig.customMigrationsPath,
-          testConfig.schemaPath,
-          "up",
-        ),
-        generateMigrations(
-          testConfig.customMigrationsPath,
-          testConfig.schemaPath,
-          "down",
-        ),
-      ]);
-    });
+  await createMigrationDirectoryIfNotExists(
+    testConfig.customMigrationsPath,
+  ).then(async () => {
+    return Promise.all([
+      generateMigrations(
+        testConfig.customMigrationsPath,
+        testConfig.schemaPath,
+        "up",
+      ),
+      generateMigrations(
+        testConfig.customMigrationsPath,
+        testConfig.schemaPath,
+        "down",
+      ),
+    ]);
+  });
 
   const migrationsDir = await fs.readdir(testConfig.customMigrationsPath);
 
@@ -117,8 +99,8 @@ test("Custom schema path", async () => {
     testConfig.customMigrationsPath,
     testConfig.customSchemaPath,
     "up",
-  )
+  );
 
   const migrationsDir = await fs.readdir(testConfig.customMigrationsPath);
   expect(migrationsDir[2]).toBe("002.do.sql");
-})
+});
