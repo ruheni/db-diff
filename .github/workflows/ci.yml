@@ -1,4 +1,4 @@
-name: "Bump Version"
+name: "CI — test, bump, and publish"
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       - run: pnpm run test
   bump-version:
     name: "Bump Version on main"
-    needs: [setup-and-test, bump-version]
+    needs: [setup-and-test]
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
