@@ -10,7 +10,7 @@ async function createMigrationDirectoryIfNotExists(migrationDir: string) {
   } catch (error) {
     if (error.code === "ENOENT") {
       logger.info(`Creating your migration folder in ${migrationDir}`);
-      fs.mkdir(migrationDir);
+      fs.mkdir(migrationDir, { recursive: true });
     }
   }
 }
@@ -39,8 +39,6 @@ async function generateMigrations(
   schemaPath,
   migrationKind: MigrationKind,
 ) {
-  await createMigrationDirectoryIfNotExists(migrationDir);
-
   const nextMigrationId = await getNextMigrationId(
     migrationDir,
     migrationKind,
@@ -59,7 +57,6 @@ async function generateMigrations(
 
         logger.gray("📭 No up migration was generated.");
       } catch (error) {
-        console.log("Error exitCode", error.exitCode);
         if (error.exitCode === 2) {
           await fs
             .writeFile(
@@ -115,3 +112,4 @@ async function generateMigrations(
 }
 
 export default generateMigrations;
+export { createMigrationDirectoryIfNotExists };

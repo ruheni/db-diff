@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import logger from "./lib/logger";
-import generateMigrations from "./lib/migration";
+import generateMigrations, {
+  createMigrationDirectoryIfNotExists,
+} from "./lib/migration";
 import CLI from "./cli";
 import path from "path";
 
@@ -10,6 +12,7 @@ async function main() {
   const normalizedMigrationsDirPath = path.join(process.cwd(), migrationsDir);
   const normalizedSchemaPath = path.join(process.cwd(), schema);
 
+  await createMigrationDirectoryIfNotExists(normalizedMigrationsDirPath);
   if (up) {
     await generateMigrations(
       normalizedMigrationsDirPath,
@@ -23,13 +26,13 @@ async function main() {
       "down",
     );
   } else {
-    Promise.all([
-      await generateMigrations(
+    await Promise.all([
+      generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
         "up",
       ),
-      await generateMigrations(
+      generateMigrations(
         normalizedMigrationsDirPath,
         normalizedSchemaPath,
         "down",
