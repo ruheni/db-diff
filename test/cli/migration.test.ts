@@ -12,7 +12,7 @@ const testConfig = {
   schemaPath: updatedPath("prisma/schema.prisma"),
   migrationsPath: updatedPath("tmp"),
   customMigrationsPath: updatedPath("tmp/migrations"),
-  customSchemaPath: updatedPath("__test__/schema.prisma"),
+  customSchemaPath: updatedPath("test/schema.prisma"),
   dbPath: updatedPath("prisma/dev.db"),
 };
 
