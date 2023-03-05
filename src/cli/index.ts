@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { version } from "../../package.json";
+import loadConfig from "@platformatic/service";
 
 type CliInput = {
   up: boolean;
@@ -9,6 +10,8 @@ type CliInput = {
 };
 export default () => {
   const program = new Command();
+  const { configManager: { current } } = loadConfig({}, "")
+  const migrationsDir = current.migrations?.dir ?? "./migrations";
 
   program
     .name("")
@@ -22,7 +25,7 @@ export default () => {
     .option(
       "--migrations-dir <path-to-your-migrations-dir>",
       "Path to your migrations directory. Default value is `migrations`",
-      "./migrations",
+      migrationsDir,
     )
     .option("--up", "Generates the `up` migration only", false)
     .option("--down", "Generates the `down` migration only", false)
