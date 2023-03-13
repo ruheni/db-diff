@@ -22,11 +22,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@molt/command": "^0.7.0",
+    "@platformatic/db": "^0.17.1",
     "chalk": "5.1.0",
     "commander": "9.4.1",
-    "execa": "6.1.0"
+    "execa": "6.1.0",
+    "read-pkg-up": "^9.1.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@platformatic/service": "^0.17.1",
     "@types/node": "18.8.3",
     "@typescript-eslint/eslint-plugin": "5.40.0",
     "@typescript-eslint/parser": "5.40.0",
@@ -40,8 +45,8 @@
     "vitest": "0.24.0"
   },
   "peerDependencies": {
-    "prisma": "3.9.x || 4.x",
-    "@platformatic/service": "*"
+    "@platformatic/db": "*",
+    "prisma": "3.9.x || 4.x"
   },
   "publishConfig": {
     "access": "public"

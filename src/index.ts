@@ -1,54 +1,40 @@
 #!/usr/bin/env node
-import logger from "./lib/logger";
-import generateMigrations, {
-  createMigrationDirectoryIfNotExists,
-} from "./lib/migration";
-import CLI from "./cli";
-import path from "path";
+import logger from './util/logger'
+import args from './args'
+import path from 'path'
+import { createMigrationsDir, getPlatformaticConfig, getPrismaConfigFromPackageJson } from './util'
+import { downMigration, upMigration } from './migration'
 
 async function main() {
-  const { migrationsDir, schema, up, down } = CLI();
+  const { description, migrationsDir, schema, up, down } = args
 
-  const normalizedMigrationsDirPath = path.join(process.cwd(), migrationsDir);
-  const normalizedSchemaPath = path.join(process.cwd(), schema);
+  const schemaPath = schema ?? (await getPrismaConfigFromPackageJson()) ?? './prisma/schema.prisma'
+  const migrationPath = migrationsDir ?? (await getPlatformaticConfig()) ?? './migrations'
 
-  await createMigrationDirectoryIfNotExists(normalizedMigrationsDirPath);
+  await createMigrationsDir(migrationPath)
+  const normalizedMigrationsDir = path.resolve(migrationPath)
+  const normalizedSchemaPath = path.resolve(schemaPath)
+
   if (up) {
-    await generateMigrations(
-      normalizedMigrationsDirPath,
-      normalizedSchemaPath,
-      "up",
-    );
+    await upMigration(normalizedMigrationsDir, normalizedSchemaPath, description)
   } else if (down) {
-    await generateMigrations(
-      normalizedMigrationsDirPath,
-      normalizedSchemaPath,
-      "down",
-    );
+    await downMigration(normalizedMigrationsDir, normalizedSchemaPath, description)
   } else {
     await Promise.all([
-      generateMigrations(
-        normalizedMigrationsDirPath,
-        normalizedSchemaPath,
-        "up",
-      ),
-      generateMigrations(
-        normalizedMigrationsDirPath,
-        normalizedSchemaPath,
-        "down",
-      ),
-    ]);
+      upMigration(normalizedMigrationsDir, normalizedSchemaPath, description),
+      downMigration(normalizedMigrationsDir, normalizedSchemaPath, description),
+    ])
   }
 }
 
 main().catch((e) => {
   if (e instanceof Error) {
-    logger.error(e.name);
-    logger.error(e.message);
+    logger.error(e.name)
+    logger.error(e.message)
   } else {
-    logger.error("Oops, something went wrong...");
-    logger.error(e);
+    logger.error('Oops, something went wrong...')
+    logger.error(e)
   }
-});
+})
 
-export default main;
+export default main
