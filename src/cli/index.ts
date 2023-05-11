@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { version } from "../../package.json";
-import loadConfig from "@platformatic/service";
+import { loadConfig } from '@platformatic/db/lib/load-config.mjs'
 
 type CliInput = {
   up: boolean;
@@ -8,10 +8,13 @@ type CliInput = {
   schema: string;
   migrationsDir: string;
 };
-export default () => {
+
+export default async () => {
   const program = new Command();
-  const { configManager: { current } } = loadConfig({}, "")
-  const migrationsDir = current.migrations?.dir ?? "./migrations";
+
+  const { configManager: { current } } = await loadConfig({}, {})
+
+  const migrationsDir = current.migrations.dir ?? "./migrations";
 
   program
     .name("")
