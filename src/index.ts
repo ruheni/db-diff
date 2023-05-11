@@ -7,10 +7,10 @@ import CLI from "./cli";
 import path from "path";
 
 async function main() {
-  const { migrationsDir, schema, up, down } = CLI();
+  const { migrationsDir, schema, up, down } = await CLI();
 
-  const normalizedMigrationsDirPath = path.join(process.cwd(), migrationsDir);
-  const normalizedSchemaPath = path.join(process.cwd(), schema);
+  const normalizedMigrationsDirPath = path.resolve(migrationsDir);
+  const normalizedSchemaPath = path.resolve(schema);
 
   await createMigrationDirectoryIfNotExists(normalizedMigrationsDirPath);
   if (up) {
