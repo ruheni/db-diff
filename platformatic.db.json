@@ -1,0 +1,15 @@
+{
+  "$schema": "https://platformatic.dev/schemas/v0.23.2/db",
+  "server": {
+    "hostname": "127.0.0.2",
+    "port": "8000"
+  },
+  "db": {
+    "connectionString": "sqlite://./dev.db",
+    "graphql": true,
+    "openapi": true
+  },
+  "migrations": {
+    "dir": "migrations"
+  }
+}
