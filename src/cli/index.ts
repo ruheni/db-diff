@@ -11,6 +11,7 @@ type CliInput = {
 
 export default async () => {
   const program = new Command();
+
   const { configManager: { current } } = await loadConfig({}, "")
 
   const migrationsDir = current.migrations.dir ?? "./migrations";
