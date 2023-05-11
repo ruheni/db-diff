@@ -1,6 +1,6 @@
 import { Command } from "commander";
-import { version } from "../../package.json";
 import { loadConfig } from "@platformatic/db/lib/load-config.mjs";
+import { version } from "../../package.json";
 
 export type CliInput = {
   up: boolean;
