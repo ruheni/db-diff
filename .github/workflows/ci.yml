@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "pnpm"
-      - run: pnpm install
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm install -D prisma && pnpm run test
   bump-version:
     name: "Bump Version on main"
@@ -68,7 +68,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "pnpm"
-      - run: pnpm install
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm run build
       - uses: JS-DevTools/npm-publish@v1
         with:
