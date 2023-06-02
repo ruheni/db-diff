@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import { readPackageUp } from 'read-pkg-up'
-import { loadConfig } from "@platformatic/db/lib/load-config.mjs";
+import { loadConfig } from '@platformatic/db/lib/load-config.mjs'
 import logger from './logger'
 
 /**
