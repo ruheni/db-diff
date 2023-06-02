@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "@molt/command": "^0.7.0",
-    "@platformatic/db": "^0.17.1",
+    "@platformatic/db": "^0.22",
     "chalk": "5.2.0",
     "execa": "7.1.1",
     "read-pkg-up": "^9.1.0",
@@ -44,7 +44,7 @@
   },
   "peerDependencies": {
     "@platformatic/db": "*",
-    "prisma": ">= 3.9.x"
+    "prisma": ">= 4.x"
   },
   "publishConfig": {
     "access": "public"
