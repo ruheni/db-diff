@@ -5,7 +5,7 @@
     "port": "8000"
   },
   "db": {
-    "connectionString": "sqlite://./dev.db",
+    "connectionString": "sqlite://./prisma/dev.db",
     "graphql": true,
     "openapi": true
   },
