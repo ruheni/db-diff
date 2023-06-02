@@ -6,7 +6,7 @@ import { createMigrationsDir, getPlatformaticConfig, getPrismaConfigFromPackageJ
 import { downMigration, upMigration } from './migration'
 
 async function main() {
-  const { description, migrationsDir, schema, up, down } = args
+  const { migrationsDir, schema, up, down } = args
 
   const schemaPath = schema ?? (await getPrismaConfigFromPackageJson()) ?? './prisma/schema.prisma'
   const migrationPath = migrationsDir ?? (await getPlatformaticConfig()) ?? './migrations'
@@ -16,13 +16,13 @@ async function main() {
   const normalizedSchemaPath = path.resolve(schemaPath)
 
   if (up) {
-    await upMigration(normalizedMigrationsDir, normalizedSchemaPath, description)
+    await upMigration(normalizedMigrationsDir, normalizedSchemaPath)
   } else if (down) {
-    await downMigration(normalizedMigrationsDir, normalizedSchemaPath, description)
+    await downMigration(normalizedMigrationsDir, normalizedSchemaPath)
   } else {
     await Promise.all([
-      upMigration(normalizedMigrationsDir, normalizedSchemaPath, description),
-      downMigration(normalizedMigrationsDir, normalizedSchemaPath, description),
+      upMigration(normalizedMigrationsDir, normalizedSchemaPath),
+      downMigration(normalizedMigrationsDir, normalizedSchemaPath),
     ])
   }
 }
