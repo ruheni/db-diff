@@ -2,7 +2,7 @@ import { execaCommand } from 'execa'
 import fs from 'fs/promises'
 import logger from './util/logger'
 
-export async function upMigration(migrationDir, schemaPath, description) {
+export async function upMigration(migrationDir, schemaPath) {
   const migrationId = await nextMigrationId(migrationDir, 'up')
 
   try {
@@ -30,7 +30,7 @@ export async function upMigration(migrationDir, schemaPath, description) {
   }
 }
 
-export async function downMigration(migrationDir, schemaPath, description) {
+export async function downMigration(migrationDir, schemaPath) {
   const migrationId = await nextMigrationId(migrationDir, 'down')
   try {
     await execaCommand(
