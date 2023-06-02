@@ -6,7 +6,7 @@ const args = Command.parameters({
   'description d': z
     .string()
     .optional()
-    // TODO: add validation to replace "." with ""
+    // TODO: add validation to replace "." with "" 
     .describe('Label to help keep track of what happens in the script. It should not contain periods'),
   schema: z
     .string()
